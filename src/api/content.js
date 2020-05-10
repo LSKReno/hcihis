@@ -1,7 +1,7 @@
 import request from '../utils/request.js'
 
 // pharmacyDrug
-export function pharmacyDrug(params) {
+export function pharmacyDrug (params) {
   return request({
     url: '/pharmacyDrug',
     method: 'post',
@@ -9,8 +9,8 @@ export function pharmacyDrug(params) {
   })
 }
 
-//patientPay
-export function patientPay(params) {
+// patientPay
+export function patientPay (params) {
   return request({
     url: '/patientPay',
     method: 'post',
@@ -18,33 +18,10 @@ export function patientPay(params) {
   })
 }
 // patientRefund
-export function patientRefund(params) {
+export function patientRefund (params) {
   return request({
     url: '/patientRefund',
     method: 'post',
     data: params
   })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

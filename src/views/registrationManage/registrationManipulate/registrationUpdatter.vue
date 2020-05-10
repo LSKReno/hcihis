@@ -18,11 +18,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="身份证号*">
-          <el-input
-            v-model="form.identityNumber"
-            placeholder="此处填写身份证号"
-            auto-complete="off"
-          ></el-input>
+          <el-input v-model="form.identityNumber" placeholder="此处填写身份证号" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="出生日期*">
           <div class="block">
@@ -104,11 +100,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="挂号员ID*">
-          <el-input
-            v-model="form.registrationStaff"
-            placeholder="此处填写挂号员ID"
-            auto-complete="off"
-          ></el-input>
+          <el-input v-model="form.registrationStaff" placeholder="此处填写挂号员ID" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="是否购买病历*">
           <el-select v-model="form.buyMedicalRecord" clearable placeholder="此处填写是否购买病历*">
@@ -131,266 +123,257 @@ import { getDepartmentOptions as getDepartmentOptionsApi } from '../../../api/de
 import { remoteFindDoctorOptions as remoteFindDoctorOptionsApi } from '../../../api/doctor'
 
 export default {
-    name: 'RegistrationAdder',
-    props: {
-        dialogFormVisible: Boolean,
-        // data: [Object, Boolean],
-        title: String
-        // departTree: Array
+  name: 'RegistrationAdder',
+  props: {
+    dialogFormVisible: Boolean,
+    // data: [Object, Boolean],
+    title: {
+      type: String,
+      default: ''
+    }
+    // departTree: Array
+  },
+  data () {
+    return {
+      props: {
+        value: 'id',
+        label: 'name',
+        children: 'children'
+      },
+      options: [],
+      doctorOptions: [],
+      form: {
+        id: null,
+        realName: '',
+        gender: '',
+        identityNumber: '',
+        dateOfBirth: '',
+        age: '',
+        paymentMethod: '',
+        homeAddress: '',
+        selectedDepartment: '',
+        registeredLevel: '',
+        selectedDoctorID: '',
+        registrationNoon: '',
+        registrationStaff: '',
+        buyMedicalRecord: ''
+      },
+      departmentsList: [],
+      btnLoading: false
+    }
+  },
+  watch: {
+    data: {
+      handler: function () {}
+    }
+  },
+  methods: {
+    calculateAge () {
+      function getCurrentYear () {
+        var date = new Date()
+        // 年
+        var year = date.getFullYear()
+        return year
+      }
+      var birth = this.moment(this.form.dateOfBirth).format('YYYY')
+      this.form.age = parseInt(getCurrentYear()) - parseInt(birth)
+      // console.log(this.form.age);
     },
-    data () {
-        return {
-            props: {
-                value: 'id',
-                label: 'name',
-                children: 'children'
-            },
-            options: [],
-            doctorOptions: [],
-            form: {
-                id: null,
-                realName: '',
-                gender: '',
-                identityNumber: '',
-                dateOfBirth: '',
-                age: '',
-                paymentMethod: '',
-                homeAddress: '',
-                selectedDepartment: '',
-                registeredLevel: '',
-                selectedDoctorID: '',
-                registrationNoon: '',
-                registrationStaff: '',
-                buyMedicalRecord: ''
-            },
-            departmentsList: [],
-            btnLoading: false
+    resetDoctor () {
+      this.doctorOptions = []
+      this.form.selectedDoctorID = ''
+    },
+    btnOk () {
+      // 显示日期在页面上  yyy-MM-dd
+      function getCurrentDate () {
+        var date = new Date()
+        // 年
+        var year = date.getFullYear()
+        // 月
+        var month = date.getMonth() + 1
+        // 日
+        var day = date.getDate()
+        // 时
+        var hh = date.getHours()
+        // 分
+        var mm = date.getMinutes()
+        // 秒
+        var ss = date.getSeconds()
+
+        if (month >= 1 && month <= 9) {
+          month = '0' + month
         }
-    },
-    watch: {
-        data: {
-            handler: function () {}
+        if (day >= 1 && day <= 9) {
+          day = '0' + day
         }
-    },
-    methods: {
-        calculateAge () {
-            function getCurrentYear () {
-                var date = new Date()
-                // 年
-                var year = date.getFullYear()
-                return year
-            }
-            var birth = this.moment(this.form.dateOfBirth).format('YYYY')
-            this.form.age = parseInt(getCurrentYear()) - parseInt(birth)
-            // console.log(this.form.age);
-        },
-        resetDoctor () {
-            this.doctorOptions = []
-            this.form.selectedDoctorID = ''
-        },
-        btnOk () {
-            // 显示日期在页面上  yyy-MM-dd
-            function getCurrentDate () {
-                var date = new Date()
-                // 年
-                var year = date.getFullYear()
-                // 月
-                var month = date.getMonth() + 1
-                // 日
-                var day = date.getDate()
-                // 时
-                var hh = date.getHours()
-                // 分
-                var mm = date.getMinutes()
-                // 秒
-                var ss = date.getSeconds()
+        if (hh >= 1 && hh <= 9) {
+          hh = '0' + hh
+        }
+        if (mm >= 1 && mm <= 9) {
+          mm = '0' + mm
+        }
+        if (ss >= 1 && ss <= 9) {
+          ss = '0' + ss
+        }
 
-                if (month >= 1 && month <= 9) {
-                    month = '0' + month
-                }
-                if (day >= 1 && day <= 9) {
-                    day = '0' + day
-                }
-                if (hh >= 1 && hh <= 9) {
-                    hh = '0' + hh
-                }
-                if (mm >= 1 && mm <= 9) {
-                    mm = '0' + mm
-                }
-                if (ss >= 1 && ss <= 9) {
-                    ss = '0' + ss
-                }
+        return year + '-' + month + '-' + day + ' ' + hh + ':' + mm + ':' + ss
+      }
 
-                return (
-                    year +
-                    '-' +
-                    month +
-                    '-' +
-                    day +
-                    ' ' +
-                    hh +
-                    ':' +
-                    mm +
-                    ':' +
-                    ss
-                )
+      if (this.form.realName === '') {
+        this.$message('真实姓名不可以为空喔~~')
+      } else if (this.form.gender === '') {
+        this.$message('性别不可以为空喔~~')
+      } else if (this.form.identityNumber === '') {
+        this.$message('身份证号不可以为空喔~~')
+      } else if (this.form.dateOfBirth === '') {
+        this.$message('出生日期不可以为空喔~~')
+      } else if (this.form.paymentMethod === '') {
+        this.$message('支付方式不可以为空喔~~')
+      } else if (this.form.homeAddress === '') {
+        this.$message('家庭住址不可以为空喔~~')
+      } else if (this.form.selectedDepartment === '') {
+        this.$message('挂号科室不可以为空喔~~')
+      } else if (this.form.registeredLevel === '') {
+        this.$message('挂号级别不可以为空喔~~')
+      } else if (this.form.registrationNoon === '') {
+        this.$message('看诊午别不可以为空喔~~')
+      } else if (this.form.registrationStaff === '') {
+        this.$message('挂号员ID不可以为空喔~~')
+      } else if (this.form.buyMedicalRecord === '') {
+        this.$message('是否购买病历不可以为空喔~~')
+      } else if (this.form.selectedDoctorID === '') {
+        this.$message('看诊医生ID不可以为空喔~~')
+      } else if (this.form.age === '') {
+        this.$message('年龄不可以为空喔~~')
+      } else if (
+        this.form.realName !== '' &&
+        this.form.gender !== '' &&
+        this.form.identityNumber !== '' &&
+        this.form.dateOfBirth !== '' &&
+        this.form.paymentMethod !== '' &&
+        this.form.homeAddress !== '' &&
+        this.form.selectedDepartment !== '' &&
+        this.form.registeredLevel !== '' &&
+        this.form.registrationNoon !== '' &&
+        this.form.registrationStaff !== '' &&
+        this.form.buyMedicalRecord !== '' &&
+        this.form.amountReceivable !== '' &&
+        this.form.selectedDoctorID !== '' &&
+        this.form.age !== '' &&
+        this.form.age !== 'NaN'
+      ) {
+        console.log('挂号调试')
+        console.log(this.form.selectedDepartment)
+        console.log(this.form.selectedDoctorID)
+        this.btnLoading = true
+        addRegistrationApi({
+          realName: this.form.realName,
+          gender: this.form.gender,
+          identityNumber: this.form.identityNumber,
+          dateOfBirth: this.moment(this.form.dateOfBirth).format(
+            'YYYY-MM-DD HH:mm:ss'
+          ),
+          paymentMethod: this.form.paymentMethod,
+          homeAddress: this.form.homeAddress,
+          registeredDepartment: this.form.selectedDepartment,
+          registeredLevel: this.form.registeredLevel,
+          registrationNoon: this.form.registrationNoon,
+          registrationStaff: this.form.registrationStaff,
+          buyMedicalRecord: this.form.buyMedicalRecord,
+          age: this.form.age,
+          vistingDoctorID: this.form.selectedDoctorID,
+          registrationDate: getCurrentDate()
+        })
+          .then(res => {
+            if (res[0].status === 200) {
+              console.log('添加挂号成功')
+              this.$message('您填写的挂号添加成功了喔~~')
+              this.$emit('refreshRegistrations')
+            } else if (res[0].status === 1) {
+              this.$message('今日该医生挂号数已超过挂号限额~~')
             }
-
-            if (this.form.realName === '') {
-                this.$message('真实姓名不可以为空喔~~')
-            } else if (this.form.gender === '') {
-                this.$message('性别不可以为空喔~~')
-            } else if (this.form.identityNumber === '') {
-                this.$message('身份证号不可以为空喔~~')
-            } else if (this.form.dateOfBirth === '') {
-                this.$message('出生日期不可以为空喔~~')
-            } else if (this.form.paymentMethod === '') {
-                this.$message('支付方式不可以为空喔~~')
-            } else if (this.form.homeAddress === '') {
-                this.$message('家庭住址不可以为空喔~~')
-            } else if (this.form.selectedDepartment === '') {
-                this.$message('挂号科室不可以为空喔~~')
-            } else if (this.form.registeredLevel === '') {
-                this.$message('挂号级别不可以为空喔~~')
-            } else if (this.form.registrationNoon === '') {
-                this.$message('看诊午别不可以为空喔~~')
-            } else if (this.form.registrationStaff === '') {
-                this.$message('挂号员ID不可以为空喔~~')
-            } else if (this.form.buyMedicalRecord === '') {
-                this.$message('是否购买病历不可以为空喔~~')
-            } else if (this.form.selectedDoctorID === '') {
-                this.$message('看诊医生ID不可以为空喔~~')
-            } else if (this.form.age === '') {
-                this.$message('年龄不可以为空喔~~')
-            } else if (
-                this.form.realName !== '' &&
-                this.form.gender !== '' &&
-                this.form.identityNumber !== '' &&
-                this.form.dateOfBirth !== '' &&
-                this.form.paymentMethod !== '' &&
-                this.form.homeAddress !== '' &&
-                this.form.selectedDepartment !== '' &&
-                this.form.registeredLevel !== '' &&
-                this.form.registrationNoon !== '' &&
-                this.form.registrationStaff !== '' &&
-                this.form.buyMedicalRecord !== '' &&
-                this.form.amountReceivable !== '' &&
-                this.form.selectedDoctorID !== '' &&
-                this.form.age !== '' &&
-                this.form.age !== 'NaN'
-            ) {
-                console.log('挂号调试')
-                console.log(this.form.selectedDepartment)
-                console.log(this.form.selectedDoctorID)
-                this.btnLoading = true
-                addRegistrationApi({
-                    realName: this.form.realName,
-                    gender: this.form.gender,
-                    identityNumber: this.form.identityNumber,
-                    dateOfBirth: this.moment(this.form.dateOfBirth).format(
-                        'YYYY-MM-DD HH:mm:ss'
-                    ),
-                    paymentMethod: this.form.paymentMethod,
-                    homeAddress: this.form.homeAddress,
-                    registeredDepartment: this.form.selectedDepartment,
-                    registeredLevel: this.form.registeredLevel,
-                    registrationNoon: this.form.registrationNoon,
-                    registrationStaff: this.form.registrationStaff,
-                    buyMedicalRecord: this.form.buyMedicalRecord,
-                    age: this.form.age,
-                    vistingDoctorID: this.form.selectedDoctorID,
-                    registrationDate: getCurrentDate()
-                })
-                    .then(res => {
-                        if (res[0].status === 200) {
-                            console.log('添加挂号成功')
-                            this.$message('您填写的挂号添加成功了喔~~')
-                            this.$emit('refreshRegistrations')
-                        } else if (res[0].status === 1) {
-                            this.$message('今日该医生挂号数已超过挂号限额~~')
-                        }
-                    })
-                    .catch(res => {
-                        // console.log("没有拿到半句");
-                        // this.$message("~~~有地方出问题啦");
-                        this.$emit('refreshRegistrations')
-                    })
-            }
-            this.btnLoading = false
-            // realName: "",
-            //     gender: "",
-            //     identityNumber: "",
-            //     dateOfBirth: "",
-            //     age: "",
-            //     paymentMethod: "",
-            //     homeAddress: "",
-            //     registeredDepartment: "",
-            //     registeredLevel: "",
-            //     vistingDoctorID: "",
-            //     registrationNoon: "",
-            //     registrationStaff: "",
-            //     buyMedicalRecord: "",
-            //     amountReceivable: ""
-            this.form = {
-                id: null,
-                realName: '',
-                gender: '',
-                identityNumber: '',
-                dateOfBirth: '',
-                age: '',
-                paymentMethod: '',
-                homeAddress: '',
-                selectedDepartment: '',
-                registeredLevel: '',
-                selectedDoctorID: '',
-                registrationNoon: '',
-                registrationStaff: '',
-                buyMedicalRecord: ''
-            }
+          })
+          .catch(res => {
+            // console.log("没有拿到半句");
+            // this.$message("~~~有地方出问题啦");
             this.$emit('refreshRegistrations')
-        },
-        getDepartmentOptionsList () {
-            getDepartmentOptionsApi({})
-                .then(res => {
-                    console.log(res)
-                    this.options = res
-                })
-                .catch(res => {})
-        },
-        remoteFindDoctor (department, registeredLevel) {
-            console.log(department)
-            console.log(registeredLevel)
+          })
+      }
+      this.btnLoading = false
+      // realName: "",
+      //     gender: "",
+      //     identityNumber: "",
+      //     dateOfBirth: "",
+      //     age: "",
+      //     paymentMethod: "",
+      //     homeAddress: "",
+      //     registeredDepartment: "",
+      //     registeredLevel: "",
+      //     vistingDoctorID: "",
+      //     registrationNoon: "",
+      //     registrationStaff: "",
+      //     buyMedicalRecord: "",
+      //     amountReceivable: ""
+      this.form = {
+        id: null,
+        realName: '',
+        gender: '',
+        identityNumber: '',
+        dateOfBirth: '',
+        age: '',
+        paymentMethod: '',
+        homeAddress: '',
+        selectedDepartment: '',
+        registeredLevel: '',
+        selectedDoctorID: '',
+        registrationNoon: '',
+        registrationStaff: '',
+        buyMedicalRecord: ''
+      }
+      this.$emit('refreshRegistrations')
+    },
+    getDepartmentOptionsList () {
+      getDepartmentOptionsApi({})
+        .then(res => {
+          console.log(res)
+          this.options = res
+        })
+        .catch(res => {})
+    },
+    remoteFindDoctor (department, registeredLevel) {
+      console.log(department)
+      console.log(registeredLevel)
 
-            remoteFindDoctorOptionsApi({
-                department: department,
-                registeredLevel: registeredLevel
-            })
-                .then(res => {
-                    console.log(res)
-                    this.doctorOptions = res
-                })
-                .catch(res => {})
-            //     // setTimeout(() => {
-            //     //     this.doctorOptions = this.list.filter(item => {
-            //     //         return (
-            //     //             item.label
-            //     //                 .toLowerCase()
-            //     //                 .indexOf(query.toLowerCase()) > -1
-            //     //         );
-            //     //     });
-            //     // }, 200);
-        }
-    },
-    mounted () {
-        this.getDepartmentOptionsList()
-    },
-    components: {}
+      remoteFindDoctorOptionsApi({
+        department: department,
+        registeredLevel: registeredLevel
+      })
+        .then(res => {
+          console.log(res)
+          this.doctorOptions = res
+        })
+        .catch(res => {})
+      //     // setTimeout(() => {
+      //     //     this.doctorOptions = this.list.filter(item => {
+      //     //         return (
+      //     //             item.label
+      //     //                 .toLowerCase()
+      //     //                 .indexOf(query.toLowerCase()) > -1
+      //     //         );
+      //     //     });
+      //     // }, 200);
+    }
+  },
+  mounted () {
+    this.getDepartmentOptionsList()
+  },
+  components: {}
 }
 </script>
 <style lang="scss">
 .registration-dialog {
-    .el-cascader {
-        width: 100%;
-    }
+  .el-cascader {
+    width: 100%;
+  }
 }
 </style>

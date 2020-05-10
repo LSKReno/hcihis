@@ -6,6 +6,7 @@ import ContentManage from './modules/contentManage'
 import doctorWorkstationManage from './modules/doctorWorkstationManage'
 import registrationWorkstationManage from './modules/registrationWorkstationManage'
 import statisticsManage from './modules/statistics'
+import mtDoctorWorkstation from './modules/mtDoctorWorkstation'
 
 Vue.use(Router)
 
@@ -34,7 +35,10 @@ const RouteList = [{
       // 医生的
       doctorWorkstationManage.medicalRecordManage,
       // 医技医生的
-      ContentManage.drug,
+      ContentManage.medicalTechnology,
+      mtDoctorWorkstation.check,
+      mtDoctorWorkstation.checkout,
+      mtDoctorWorkstation.disposition,
       // 财务的统计
       statisticsManage.statistics,
 

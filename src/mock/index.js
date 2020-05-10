@@ -5,6 +5,8 @@ import Mock from 'mockjs2'
 console.log('mock mounting')
 require('./services/auth')
 
+require('./services/medicalTechnology')
+
 Mock.setup({
   timeout: 800 // setter delay time
 })

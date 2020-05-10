@@ -1,11 +1,11 @@
 export default {
-    drug: {
-        path: '/drug_manage',
-        name: 'DrugManage',
-        meta: {
-            title: '药品管理',
-            keepAlive: false
-        },
-        component: resolve => require(['@/views/contentManage/Drug.vue'], resolve)
-    }
+  medicalTechnology: {
+      path: '/medicaltechnology_manage',
+      name: 'MedicalTechnologyManage',
+      meta: {
+          title: '医技项目管理',
+          keepAlive: true
+      },
+      component: resolve => require(['@/views/contentManage/MedicalTechnology.vue'], resolve)
+  }
 }
