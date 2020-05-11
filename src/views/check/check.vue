@@ -36,6 +36,7 @@
               <el-card class="box-card" shadow="hover" body-style="width:650px;">
                 <header>项目表格</header>
                 <vxe-table
+                  ref="mtTable"
                   border
                   resizable
                   show-overflow
@@ -43,7 +44,6 @@
                   :data.sync="medicalTechnologyTable"
                   style="border-radius:10px;"
                 >
-                  >
                   <vxe-table-column type="index" width="30"></vxe-table-column>
                   <vxe-table-column field="medicalTechnologyID" title="项目编码"></vxe-table-column>
                   <vxe-table-column field="medicalTechnologyName" title="医技名称"></vxe-table-column>
@@ -59,10 +59,10 @@
                       <el-button
                         style="background-color:#FFCCCC;"
                         round
-                        :disabled="row.executed"
+                        :disabled="row.executed===1||currentPatient.visited===1"
                         size="small"
                         @click="confirmExecute(row)"
-                      >{{ row.executed?'已执行':'确认执行' }}</el-button>
+                      >{{ (row.executed===1||currentPatient.visited===1)?'已执行':'确认执行' }}</el-button>
                     </template>
                   </vxe-table-column>
                 </vxe-table>
@@ -119,7 +119,7 @@
                 shadow="hover"
                 body-style="height:500px;"
               >
-                <div class>检查结果录入</div>
+                <div class>{{ resultTitle }} - 检查结果录入</div>
                 <el-input
                   type="textarea"
                   :autosize="{ minRows: 5, maxRows: 7}"
@@ -162,7 +162,11 @@
                   </div>
                 </el-upload>
                 <div style="display:flex;justify-content:flex-end;margin-top:15px;">
-                  <el-button style="padding:10px;background-color:#99CCCC;" round>结果录入</el-button>
+                  <el-button
+                    style="padding:10px;background-color:#99CCCC;"
+                    round
+                    @click="enterResult"
+                  >结果录入</el-button>
                 </div>
               </el-card>
             </div>
@@ -177,9 +181,7 @@
 import ToolBar from '@/components/ToolBar.vue'
 import HelpHint from '@/components/HelpHint.vue'
 import ScrollPane from '@/components/ScrollPane.vue'
-
 import patientTabPane from './components/patientTabPane.vue'
-
 import { getPatientMT as getPatientMTApi } from '../../api/medicalTechnology'
 export default {
   components: {
@@ -190,44 +192,24 @@ export default {
   },
   data () {
     return {
-      patientRegisteredID: '',
-      medicalRecordEditChange: '',
-      medicalRecordAdderTitle: '病历编写',
-      dialogFormVisible: false,
-      medicalRecordUpdatterTitle: '病历更新',
-      medicalRecordUpdatter: false,
-      currentEditMedicalRecord: [],
-
-      dialogFormVisiblePrescription: false,
       searchParams: {
         patientName: ''
       },
       tableDataMedicalRecords: [],
       medicalTechnologyTable: [],
-      pageSize: 20,
-      currentPage: 1,
-      pageNum: 1,
-      total: 0,
       currentPatient: {
         id: null,
         realName: '',
         registeredID: '',
         medicalRecordID: '',
         gender: '',
-        identityNumber: '',
-        dateOfBirth: '',
         age: '',
-        paymentMethod: '',
-        homeAddress: '',
-        selectedDepartment: '',
         registeredLevel: '',
-        selectedDoctorID: '',
-        registrationNoon: '',
-        registrationStaff: '',
-        buyMedicalRecord: '',
-        visitingStatus: 0
+        visited: 0
       },
-      result: ''
+      resultTitle: '',
+      result: '',
+      resultFlag: 0
     }
   },
   created () {},
@@ -235,9 +217,6 @@ export default {
   methods: {
     searchPatient () {
       this.$refs.patientTabPane.searchPatient(this.searchParams.patientName)
-    },
-    diagnoise () {
-      this.patientRegisteredID = this.currentPatient.registeredID
     },
     getPatientInfo (data) {
       this.currentPatient = data
@@ -249,30 +228,61 @@ export default {
       })
     },
     confirmExecute (row) {
-      this.medicalTechnologyTable.forEach(item => {
-        if (row.medicalTechnologyID === item.medicalTechnologyID) {
-          item.executed = 1
-        }
-      })
+      if (this.resultFlag === 0) {
+        this.resultFlag = 1
+        this.resultTitle = row.medicalTechnologyName
+        this.medicalTechnologyTable.forEach(item => {
+          if (row.medicalTechnologyID === item.medicalTechnologyID) {
+            item.executed = 1
+          }
+        })
+      } else {
+        this.$message.error('请先输入上一个项目的结果')
+      }
     },
     cancelExecute () {
+      this.medicalTechnologyTable = []
       this.currentPatient = {
         id: null,
         realName: '',
         registeredID: '',
         medicalRecordID: '',
         gender: '',
-        identityNumber: '',
-        dateOfBirth: '',
         age: '',
-        paymentMethod: '',
-        homeAddress: '',
-        selectedDepartment: '',
         registeredLevel: '',
-        selectedDoctorID: '',
-        registrationNoon: '',
-        registrationStaff: '',
-        buyMedicalRecord: ''
+        visited: 0
+      }
+    },
+    enterResult () {
+      if (this.resultFlag === 0) {
+        this.$message.error('请先选择检查项目')
+      } else {
+      if (this.result === '') {
+        this.$message.error('检查结果不可为空')
+      } else {
+        this.resultTitle = ''
+        this.result = ''
+        this.resultFlag = 0
+        let finish = 0
+        this.medicalTechnologyTable.forEach(item => {
+          finish = item.executed ? finish : finish + 1
+        })
+        if (!finish) {
+          this.$message.success('该患者所有项目均已完成')
+          this.$refs.patientTabPane.makePatientVisited(this.currentPatient)
+          this.medicalTechnologyTable = []
+          this.currentPatient = {
+            id: null,
+            realName: '',
+            registeredID: '',
+            medicalRecordID: '',
+            gender: '',
+            age: '',
+            registeredLevel: '',
+            visited: 0
+          }
+        }
+      }
       }
     },
     // 条目改变时

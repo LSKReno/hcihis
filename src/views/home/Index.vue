@@ -2,7 +2,7 @@
   <div>
     <el-card style="border-radius: 15px;" shadow="hover">
       <div slot="header">
-        <span>东软云HIS系统</span>
+        <span>东软云门诊医院管理系统</span>
       </div>
       <div class="demo">
         <img src="https://i.loli.net/2019/09/06/NS7rMvRkToB3JLn.png" style="width:40%;" />

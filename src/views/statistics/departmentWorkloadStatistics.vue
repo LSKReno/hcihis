@@ -3,7 +3,7 @@
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="统计日期">
         <el-date-picker
-          v-model="formInline.value"
+          v-model="formInline.value2"
           type="datetimerange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -12,29 +12,29 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" round size="small" @click="searchdoctor">查询</el-button>
+        <el-button type="primary" round size="small" @click="searchdepartment">查询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" round size="small" @click="cleardoctor">清空</el-button>
+        <el-button type="primary" round size="small" @click="cleardepartment">清空</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" round size="small" @click="derivedoctor">导出</el-button>
+        <el-button type="primary" round size="small" @click="derivedepartment">导出</el-button>
       </el-form-item>
     </el-form>
 
-    <div style="margin-bottom:10px;">门诊医生工作量统计</div>
+    <div style="margin-bottom:10px;">门诊科室工作量统计</div>
 
     <el-table :data="tableData" height="200px" style="margin-bottom:10px;border-radius:10px;">
-      <el-table-column prop="doctorName" label="医生姓名" width="150"></el-table-column>
-      <el-table-column prop="medicalFee" label="医药费" width="150"></el-table-column>
-      <el-table-column prop="projectFee" label="项目费" width="150"></el-table-column>
-      <el-table-column prop="RegFee" label="挂号费" width="150"></el-table-column>
-      <el-table-column prop="medNumber" label="看诊人次" width="150"></el-table-column>
-      <el-table-column prop="invoiceNumber" label="发票数量" width="150"></el-table-column>
+      <el-table-column prop="departmentName" label="医生姓名" width="150"></el-table-column>
+      <el-table-column prop="medicalFee" label="医药费" ></el-table-column>
+      <el-table-column prop="projectFee" label="项目费"></el-table-column>
+      <el-table-column prop="RegFee" label="挂号费"></el-table-column>
+      <el-table-column prop="medNumber" label="看诊人次" ></el-table-column>
+      <el-table-column prop="invoiceNumber" label="发票数量"></el-table-column>
       <el-table-column prop="totalFee" label="费用总计" width="150"></el-table-column>
     </el-table>
 
-    <doctorWorkloadStatisticsChart height="80%" width="100%" />
+    <doctorWorkloadStatisticsChart name="科室工作量统计" height="80%" width="100%" />
   </div>
 </template>
 
@@ -42,22 +42,20 @@
 import doctorWorkloadStatisticsChart from './components/doctorWorkloadStatisticsChart'
 
 export default {
-  name: 'DoctorWorkloadStatistics',
+  name: 'DepartmentWorkloadStatistics',
   components: { doctorWorkloadStatisticsChart },
   data () {
     return {
-      list: [],
       tableData: [],
-
       formInline: {
-        value: ''
+        value2: ''
       }
     }
   },
   methods: {
-    searchdoctor () {
-      console.log(this.formInline.value)
-      if (this.formInline.value === '') {
+    searchdepartment () {
+      console.log(this.formInline.value2)
+      if (this.formInline.value2 === '') {
         this.$message({
           type: 'error',
           message: '日期区间为空 无法查询'
@@ -70,7 +68,7 @@ export default {
       } else {
         this.tableData.push(
           {
-            doctorName: 'Giacomo Guilizzoni',
+            departmentName: '内科',
             medicalFee: 40,
             projectFee: 156,
             RegFee: 4,
@@ -79,7 +77,7 @@ export default {
             totalFee: 200
           },
           {
-            doctorName: 'Marco Botton',
+            departmentName: '妇产科',
             medicalFee: 38,
             projectFee: 124,
             RegFee: 6,
@@ -88,7 +86,7 @@ export default {
             totalFee: 168
           },
           {
-            doctorName: 'Mariah Maclachlan',
+            departmentName: '全科诊室',
             medicalFee: 41,
             projectFee: 100,
             RegFee: 9,
@@ -97,7 +95,7 @@ export default {
             totalFee: 150
           },
           {
-            doctorName: 'Valerie Liberty',
+            departmentName: '全科门诊',
             medicalFee: 16,
             projectFee: 56,
             RegFee: 4,
@@ -112,20 +110,7 @@ export default {
         })
       }
     },
-    derivedoctor () {
-      if (this.tableData.length <= 0) {
-        this.$message({
-          type: 'error',
-          message: '图表为空 无法导出'
-        })
-      } else {
-        this.$message({
-          type: 'success',
-          message: '导出成功'
-        })
-      }
-    },
-    cleardoctor () {
+    cleardepartment () {
       if (this.tableData.length <= 0) {
         this.$message({
           type: 'error',
@@ -136,6 +121,19 @@ export default {
         this.$message({
           type: 'success',
           message: '表格成功清空'
+        })
+      }
+    },
+    derivedepartment () {
+      if (this.tableData.length <= 0) {
+        this.$message({
+          type: 'error',
+          message: '图表为空 无法导出'
+        })
+      } else {
+        this.$message({
+          type: 'success',
+          message: '导出成功'
         })
       }
     }

@@ -99,56 +99,64 @@ const getWaitedPatientByDoctor = (options) => {
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 0
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '孙尚香',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '女',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 0
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '赵云',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 0
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '马超',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 0
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '刘备',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 0
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '诸葛亮',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 0
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '孙策',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 0
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '孙坚',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 0
   }], '', 200, {})
 }
 
@@ -161,28 +169,32 @@ const getVisitedPatientByDoctor = (options) => {
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 1
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '姜维',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 1
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '曹丕',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 1
   }, {
     registeredID: Mock.mock('@guid').substring(0, 10),
     realName: '王允',
     medicalRecordID: Mock.mock('@guid').substring(0, 10),
     age: 18,
     gender: '男',
-    registeredLevel: 'pth'
+    registeredLevel: 'pth',
+    visited: 1
   }], '', 200, {})
 }
 

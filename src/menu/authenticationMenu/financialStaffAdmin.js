@@ -22,10 +22,20 @@ financialStaffAdminMenu.statistics_manage = {
 }
 
 const StatisticsManage = financialStaffAdminMenu.statistics_manage.children
-
+StatisticsManage.feemanage = {
+  name: '费用科目管理',
+  path: '/fee_manage'
+}
 StatisticsManage.statistics = {
-  name: '门诊日结',
+  name: '门诊医生工作量统计',
   path: '/statistics_manage'
 }
-
+StatisticsManage.department = {
+  name: '门诊科室工作量统计',
+  path: '/department_statistics'
+}
+StatisticsManage.dailysettle = {
+  name: '门诊日结核对',
+  path: '/daily_settle'
+}
 export default financialStaffAdminMenu

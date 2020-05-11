@@ -12,7 +12,7 @@ export default {
   nodeDevEnv: nodeDevEnv,
   // apiUrl: proApiUrl,
   apiUrl: '',
-  siteName: '东软云HIS系统',
+  siteName: '东软云门诊医院管理系统',
   minSiteMame: 'HIS',
   apiPrefix: '',
   timeout: 50000,

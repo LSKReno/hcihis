@@ -41,7 +41,9 @@ const RouteList = [{
       mtDoctorWorkstation.disposition,
       // 财务的统计
       statisticsManage.statistics,
-
+      statisticsManage.fee_manage,
+      statisticsManage.department_statistics,
+      statisticsManage.daily_settle,
       // 个人中心，可能有修改密码，头像修改等路由
       Personal.index
     ]

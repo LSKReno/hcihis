@@ -9,7 +9,7 @@
     >
       <el-form :model="form">
         <el-form-item label="医技编码*">
-          <el-input v-model="form.medicalTechnologyCode" placeholder="此处填写医技编码"></el-input>
+          <el-input v-model="form.medicalTechnologyID" placeholder="此处填写医技编码"></el-input>
         </el-form-item>
         <el-form-item label="医技名称*">
           <el-input v-model="form.medicalTechnologyName" placeholder="此处填写医技名称"></el-input>
@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import { addMedicalTechnology as addMedicalTechnologyApi } from '../../../api/medicalTechnology'
-
 export default {
   name: 'MedicalTechnologyAdder',
   props: {
@@ -63,7 +61,7 @@ export default {
         children: 'children'
       },
       form: {
-        medicalTechnologyCode: '',
+        medicalTechnologyID: '',
         medicalTechnologyName: '',
         medicalTechnologySpecifications: '',
         category: '',
@@ -81,7 +79,7 @@ export default {
   },
   methods: {
     btnOk () {
-      if (this.form.medicalTechnologyCode === '') {
+      if (this.form.medicalTechnologyID === '') {
         this.$message('医技编码不可以为空喔~~')
       } else if (this.form.medicalTechnologyName === '') {
         this.$message('医技名称不可以为空喔~~')
@@ -96,7 +94,7 @@ export default {
       } else if (this.form.pinyinMnemonic === '') {
         this.$message('拼音助记码不可以为空喔~~')
       } else if (
-        this.form.medicalTechnologyCode !== '' &&
+        this.form.medicalTechnologyID !== '' &&
         this.form.medicalTechnologyName !== '' &&
         this.form.medicalTechnologySpecifications !== '' &&
         this.form.category !== '' &&
@@ -107,7 +105,7 @@ export default {
         this.btnLoading = true
         this.$message('您填写的医技添加成功了喔~~')
         this.$emit('addMedicalTechnology', {
-          medicalTechnologyCode: this.form.medicalTechnologyCode,
+          medicalTechnologyID: this.form.medicalTechnologyID,
           medicalTechnologyName: this.form.medicalTechnologyName,
           medicalTechnologySpecifications: this.form
             .medicalTechnologySpecifications,
@@ -120,7 +118,7 @@ export default {
         this.btnLoading = false
         this.form = {
           id: null,
-          medicalTechnologyCode: '',
+          medicalTechnologyID: '',
           medicalTechnologyName: '',
           medicalTechnologySpecifications: '',
           category: '',
