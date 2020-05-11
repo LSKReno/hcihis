@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import PatientInfoPane from "./components/patientInfoPane"
-import OverallTabPane from "./OverallTabPane"
+import PatientInfoPane from './components/patientInfoPane'
+import OverallTabPane from './OverallTabPane'
 
 export default {
   data () {
@@ -18,7 +18,7 @@ export default {
     }
   },
   methods: {
-    getCurrentPatient(patient) {
+    getCurrentPatient (patient) {
       this.currentPatient = patient
       console.log('Mainpage', this.currentPatient)
     }
@@ -30,7 +30,7 @@ export default {
 
   components: {
     OverallTabPane,
-    PatientInfoPane,
+    PatientInfoPane
   }
 }
 </script>
