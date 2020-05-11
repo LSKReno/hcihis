@@ -8,3 +8,19 @@ export function remoteFindDoctorOptions (params) {
     data: params
   })
 }
+
+export function getPatientByDoctor (params) {
+  return request({
+    url: '/doctor/patients',
+    method: 'get',
+    data: params
+  })
+}
+
+export function getPatientByDepartment (params) {
+  return request({
+    url: '/department/patients',
+    method: 'get',
+    data: params
+  })
+}
