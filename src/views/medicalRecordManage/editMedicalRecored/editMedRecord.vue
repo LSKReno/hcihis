@@ -38,11 +38,11 @@
         <el-form
           ref="form"
           :model="form"
-          label-width="100px"
+          label-width="110px"
           label-position="right"
           :disabled="this.haveSubmittedMedRecord"
         >
-          <el-form-item label="主述">
+          <el-form-item label="主述*">
             <el-input
               size="medium"
               type="textarea"
@@ -50,7 +50,7 @@
               @change="setUnsaveMedRecord"
             ></el-input>
           </el-form-item>
-          <el-form-item label="现病史">
+          <el-form-item label="现病史*">
             <el-input
               size="medium"
               type="textarea"
@@ -58,7 +58,7 @@
               @change="setUnsaveMedRecord"
             ></el-input>
           </el-form-item>
-          <el-form-item label="现病治疗情况">
+          <el-form-item label="现病治疗情况*">
             <el-input
               size="medium"
               type="textarea"
@@ -66,7 +66,7 @@
               @change="setUnsaveMedRecord"
             ></el-input>
           </el-form-item>
-          <el-form-item label="既往病史">
+          <el-form-item label="既往病史*">
             <el-input
               size="medium"
               type="textarea"
@@ -74,7 +74,7 @@
               @change="setUnsaveMedRecord"
             ></el-input>
           </el-form-item>
-          <el-form-item label="过敏史">
+          <el-form-item label="过敏史*">
             <el-input
               size="medium"
               type="textarea"
@@ -116,9 +116,25 @@ export default {
       this.currentPatient.patientMedRecord.append(this.currentRecord)
     },
     setSubmittedMedRecord () {
-      this.currentPatient.currentRecord.status = '已提交'
-      this.currentPatient.currentRecord.submitTime = new Date()
-      alert('已提交')
+      if (this.currentPatient.currentRecord.selfDescription === ''){
+        this.$message.error('主诉不能为空')
+      }
+      else if (this.currentPatient.currentRecord.currentMedicalHistory === '') {
+        this.$message.error('现病史不能为空')
+      }
+      else if (this.currentPatient.currentRecord.currentTreatmentSituation === '') {
+        this.$message.error('现病治疗情况不能为空')
+      }
+      else if (this.currentPatient.currentRecord.pastMedicalHistory === '') {
+        this.$message.error('既往病史不能为空')
+      }
+      else if (this.currentPatient.currentRecord.allergyHistory === '') {
+        this.$message.error('过敏史不能为空')
+      } else {
+        this.$message.success('已提交')
+        this.currentPatient.currentRecord.status = '已提交'
+        this.currentPatient.currentRecord.submitTime = new Date()
+      }
     }
   },
   computed: {

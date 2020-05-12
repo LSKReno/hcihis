@@ -77,7 +77,8 @@ export default {
             console.log(this.clickedMedicalProjectModel)
         },
         handleAddedModelItems() {
-            this.handledAddedList = []
+            if (this.clickedMedicalProjectModel === '') { this.$message.error('请选择所添加模板') }
+            else{ this.handledAddedList = []
             for (let i = 0; i < this.clickedMedicalProjectModel.itemList.length; i++) {
                 let item = new Object()
                 item.itemID = this.clickedMedicalProjectModel.itemList[i].itemID
@@ -90,6 +91,7 @@ export default {
             }
             console.log(this.handledAddedList)
             this.$emit('handleAddedModelItems', this.handledAddedList)
+            }
         }
     },
     computed: {

@@ -100,7 +100,7 @@
       </el-table>
     </div>
     <div style="margin-top: 15px; margin-left: 15px">
-      <p style="font-size: 15px">诊断说明</p>
+      <p style="font-size: 15px">诊断说明*</p>
       <el-form style="margin-top: 5px">
         <el-form-item>
           <el-input
@@ -175,9 +175,15 @@ export default {
       this.currentPatient.currentDisease.diagnoseStatus = '已保存'
     },
     setSubmittedMDiseaseDiagnose () {
+      if(this.currentPatient.currentDisease.diseaseList.length === 0) {
+        this.$message.error('请选择确诊疾病')
+      }else if (this.description === ''){
+        this.$message.error('诊断说明不能为空')
+      } else {
       this.currentPatient.currentDisease.diagnoseStatus = '已确诊'
       this.itemDisabled = true
-      alert('已确诊')
+        this.$message.success('已确诊')
+      }
     },
     tableHeader ({ row, column, rowIndex, columnIndex }) {
       if (rowIndex === 0) {

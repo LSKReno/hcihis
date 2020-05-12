@@ -57,11 +57,11 @@
     >
       <div style="margin-left: 10px">
         <div style="float: left; margin-top: 10px">
-          <p style="width: 50px; float: left; font-size: 15px;">名称</p>
+          <p style="width: 50px; float: left; font-size: 15px;">名称*</p>
           <el-input style="width: 250px" size="mini" clearable maxlength="10" v-model="name"></el-input>
         </div>
         <div style="float: left; margin-top: 10px">
-          <p style="width: 50px; float: left; font-size: 15px;">备注</p>
+          <p style="width: 50px; float: left; font-size: 15px;">备注*</p>
           <el-input style="width: 250px" type="textarea" autosize v-model="description"></el-input>
         </div>
         <div style="float: right; margin-right: 40px;  font-size: 15px">
@@ -93,7 +93,7 @@
         max-height="120"
       >
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="项目编码" prop="itemCode" width="80"></el-table-column>
+        <el-table-column label="项目编码" prop="itemCode" width="90"></el-table-column>
         <el-table-column prop="itemName" label="项目名称" width="80"></el-table-column>
         <el-table-column prop="format" label="规格" width="50"></el-table-column>
         <el-table-column prop="price" label="单价" width="50"></el-table-column>
@@ -144,21 +144,26 @@ export default {
       return false
     },
     addItem () {
-      console.log('111')
-      for (let i = 0; i < this.selectedTableItems.length; i++) {
-        if (!this.haveAdded(this.selectedTableItems[i])) {
-          const item = {}
-          item.itemID = this.selectedTableItems[i].itemID
-          item.itemCode = this.selectedTableItems[i].itemCode
-          item.itemName = this.selectedTableItems[i].itemName
-          item.format = this.selectedTableItems[i].format
-          item.price = this.selectedTableItems[i].price
-          item.memonicCode = this.selectedTableItems[i].memonicCode
-          item.status = '暂存'
-          this.addedItems.push(item)
-        }
+      if (this.selectedTableItems.length === 0) {
+        this.$message.error('请选择所添加项目')
       }
-      console.log(this.addedItems)
+      else {
+        console.log('111')
+        for (let i = 0; i < this.selectedTableItems.length; i++) {
+          if (!this.haveAdded(this.selectedTableItems[i])) {
+            const item = {}
+            item.itemID = this.selectedTableItems[i].itemID
+            item.itemCode = this.selectedTableItems[i].itemCode
+            item.itemName = this.selectedTableItems[i].itemName
+            item.format = this.selectedTableItems[i].format
+            item.price = this.selectedTableItems[i].price
+            item.memonicCode = this.selectedTableItems[i].memonicCode
+            item.status = '暂存'
+            this.addedItems.push(item)
+          }
+        }
+        console.log(this.addedItems)
+      }
     },
     handleSelectionChange (rows) {
       this.selectedTableItems = []
@@ -181,15 +186,17 @@ export default {
       console.log(this.selectedAddedItems)
     },
     confirmAddedItem () {
-      if (this.selectedAddedItems) {
+      if (this.selectedAddedItems.length > 0) {
         for (let i = 0; i < this.selectedAddedItems.length; i++) {
           this.selectedAddedItems[i].status = '已开立'
         }
+        this.$message.success('已开立')
+      } else {
+        this.$message.error('请选择开立项目')
       }
-      alert('已开立')
     },
     deleteAddedItem () {
-      if (this.selectedAddedItems) {
+      if (this.selectedAddedItems.length > 0) {
         for (let i = 0; i < this.selectedAddedItems.length; i++) {
           let hfound = 0
           for (let j = 0; j < this.addedItems.length && !hfound; j++) {
@@ -201,9 +208,19 @@ export default {
             }
           }
         }
+      } else {
+        this.$message.error('请选择所作废项目')
       }
     },
     handleAddedModel () {
+      if (this.selectedAddedItems.length === 0) {
+        this.$message.error('请为模板添加项目(勾选以添加项目)')
+      }
+      else if (this.name === '') {
+        this.$message.error('请填写模板名称')
+      } else if (this.description === '') {
+        this.$message.error('请填写备注')
+      }  else {
       const model = {}
       model.modelName = this.name
       model.modelDescription = this.description
@@ -211,7 +228,8 @@ export default {
       this.name = ''
       this.description = ''
       this.$emit('handleAddedModel', model)
-      alert('已保存')
+      this.$message.success('保存成功')
+      }
     }
   },
   computed: {

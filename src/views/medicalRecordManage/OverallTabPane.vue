@@ -5,11 +5,12 @@
         <editMedRecord :currentPatient="patient"></editMedRecord>
       </el-tab-pane>
       <el-tab-pane label="检查检验项目" name="medicalProject">
-        <medicalProject></medicalProject>
+        <medicalProject v-if="patient.currentRecord.status != '未保存'"></medicalProject>
+        <div v-if="patient.currentRecord.status === '未保存'"><p style="font-size: 20px">请先进行就诊 </p></div>
       </el-tab-pane>
-      <el-tab-pane label="处方" name="prescription">
+      <!--<el-tab-pane label="处方" name="prescription">
         <prescription></prescription>
-      </el-tab-pane>
+      </el-tab-pane>-->
     </el-tabs>
   </div>
 </template>
