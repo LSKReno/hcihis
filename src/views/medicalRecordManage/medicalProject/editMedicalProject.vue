@@ -202,7 +202,7 @@ export default {
       let fo = 0
       if (this.selectedAddedItems.length > 0) {
         for (let i = 0; i < this.selectedAddedItems.length; i++) {
-          if (this.selectedAddedItems[i].status === '暂存' || this.selectedAddedItems[i].status === '已废除') {
+          if (this.selectedAddedItems[i].status === '暂存' || this.selectedAddedItems[i].status === '已作废') {
             this.selectedAddedItems[i].status = '已开立'
           } else {fo = 1}
         }
