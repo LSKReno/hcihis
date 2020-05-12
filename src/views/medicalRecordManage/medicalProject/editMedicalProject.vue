@@ -7,14 +7,20 @@
         style="padding-top: 0px; padding-bottom: 0px"
         @click="confirmAddedItem"
       >开立项目</el-button>
-      <i class="el-icon-delete" style="margin-left: 80px; color: #575A8F;"></i>
+      <i class="el-icon-delete" style="margin-left: 40px; color: #575A8F;"></i>
       <el-button
         type="text"
         style="padding-top: 0px; padding-bottom: 0px"
         @click="deleteAddedItem"
       >作废项目</el-button>
-      <i class="el-icon-refresh" style="margin-left: 80px; color: #575A8F;"></i>
-      <el-button type="text" style="padding-top: 0px; padding-bottom: 0px">刷新</el-button>
+      <i class="el-icon-close" style="margin-left: 40px; color: #575A8F;"></i>
+      <el-button
+              type="text"
+              style="padding-top: 0px; padding-bottom: 0px"
+              @click="deleteAddedItem2"
+      >删除项目</el-button>
+      <i class="el-icon-refresh" style="margin-left: 40px; color: #575A8F;"></i>
+      <el-button type="text" style="padding-top: 0px; padding-bottom: 0px" @click="refresh">刷新</el-button>
     </div>
     <div>
       <div style="margin-top: 10px; font-size: 12px">
@@ -29,7 +35,7 @@
             :header-cell-style="tableHeader"
             max-height="100"
           >
-            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column :selectable="checkSelectable" type="selection" width="55"></el-table-column>
             <el-table-column label="项目编码" prop="itemCode" width="80"></el-table-column>
             <el-table-column prop="itemName" label="项目名称" width="80"></el-table-column>
             <el-table-column prop="status" label="执行状态" width="80"></el-table-column>
@@ -204,12 +210,33 @@ export default {
               this.selectedAddedItems[i].itemID === this.addedItems[j].itemID
             ) {
               hfound = 1
-              this.addedItems.splice(j, 1)
+              this.addedItems[j].status = '已作废'
             }
           }
         }
       } else {
         this.$message.error('请选择所作废项目')
+      }
+    },
+    deleteAddedItem2 () {
+      if (this.selectedAddedItems.length > 0) {
+        for (let i = 0; i < this.selectedAddedItems.length; i++) {
+          let hfound = 0
+          for (let j = 0; j < this.addedItems.length && !hfound; j++) {
+            if (
+                    this.selectedAddedItems[i].itemID === this.addedItems[j].itemID
+            ) {
+              hfound = 1
+              if (this.addedItems[j].status === '已开立') {
+                this.$message.error('无法删除已开立项目')
+                continue
+              }
+              this.addedItems.splice(j, 1)
+            }
+          }
+        }
+      } else {
+        this.$message.error('请选择所删除项目')
       }
     },
     handleAddedModel () {
@@ -230,6 +257,14 @@ export default {
       this.$emit('handleAddedModel', model)
       this.$message.success('保存成功')
       }
+    },
+    refresh() {
+      if (this.addedItems.length > 0 && this.addedItems[0].status === '已开立'){
+        this.addedItems[0].status = '执行中'
+      }
+    },
+    checkSelectable(row) {
+      return row.status != '执行中'
     }
   },
   computed: {
