@@ -35,7 +35,7 @@
             :header-cell-style="tableHeader"
             max-height="100"
           >
-            <el-table-column :selectable="checkSelectable" type="selection" width="55"></el-table-column>
+            <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column label="项目编码" prop="itemCode" width="80"></el-table-column>
             <el-table-column prop="itemName" label="项目名称" width="80"></el-table-column>
             <el-table-column prop="status" label="执行状态" width="80"></el-table-column>
@@ -199,12 +199,19 @@ export default {
       console.log(this.selectedAddedItems)
     },
     confirmAddedItem () {
+      let fo = 0
       if (this.selectedAddedItems.length > 0) {
         for (let i = 0; i < this.selectedAddedItems.length; i++) {
-          this.selectedAddedItems[i].status = '已开立'
+          if (this.selectedAddedItems[i].status === '暂存' || this.selectedAddedItems[i].status === '已废除') {
+            this.selectedAddedItems[i].status = '已开立'
+          } else {fo = 1}
         }
         this.toggleSelectionTable1()
+        if (fo === 1) {
+          this.$message.info('重复开立项目')
+        } else {
         this.$message.success('已开立')
+        }
       } else {
         this.$message.error('请选择开立项目')
       }
@@ -219,7 +226,7 @@ export default {
             ) {
               hfound = 1
               if (this.addedItems[j].status !== '已开立') {
-                this.$message.info('无法作废未开立项目')
+                this.$message.info('无法作废未开立或执行中的项目')
                 continue
               }
               this.addedItems[j].status = '已作废'
@@ -240,7 +247,7 @@ export default {
                     this.selectedAddedItems[i].itemID === this.addedItems[j].itemID
             ) {
               hfound = 1
-              if (this.addedItems[j].status === '已开立') {
+              if (this.addedItems[j].status === '已开立' || this.addedItems[j].status === '执行中') {
                 this.$message.info('无法删除已开立项目')
                 continue
               }
@@ -277,9 +284,6 @@ export default {
         this.addedItems[0].status = '执行中'
       }
       this.toggleSelectionTable1()
-    },
-    checkSelectable(row) {
-      return row.status != '执行中'
     },
     toggleSelectionTable1() {
       this.$refs.table1.clearSelection()
@@ -335,8 +339,8 @@ export default {
           item.status = '暂存'
           this.addedItems.push(item)
         } else {
-          fo = 1
         }
+          fo = 1
       }
       if (fo) {
         this.$message.info('添加项中含有重复添加项目')
