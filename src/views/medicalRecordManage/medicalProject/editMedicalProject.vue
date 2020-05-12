@@ -29,7 +29,7 @@
       <div style="margin-top: 5px; margin-right: 20px; height: 120px;">
         <template>
           <el-table
-            ref="multipleTable"
+            ref="table1"
             :data="addedItems"
             @selection-change="handleAddedSelectionChange"
             :header-cell-style="tableHeader"
@@ -92,7 +92,7 @@
         </span>
       </div>
       <el-table
-        ref="itemTable"
+        ref="table2"
         :data="filteredItemData"
         @selection-change="handleSelectionChange"
         :header-cell-style="tableHeader"
@@ -150,6 +150,7 @@ export default {
       return false
     },
     addItem () {
+      let fo = 0
       if (this.selectedTableItems.length === 0) {
         this.$message.error('请选择所添加项目')
       }
@@ -166,9 +167,15 @@ export default {
             item.memonicCode = this.selectedTableItems[i].memonicCode
             item.status = '暂存'
             this.addedItems.push(item)
+          } else {
+            fo = 1
           }
         }
         console.log(this.addedItems)
+        if (fo) {
+          this.$message.info('添加项中含有重复添加项目')
+        }
+        this.toggleSelectionTable2()
       }
     },
     handleSelectionChange (rows) {
@@ -196,6 +203,7 @@ export default {
         for (let i = 0; i < this.selectedAddedItems.length; i++) {
           this.selectedAddedItems[i].status = '已开立'
         }
+        this.toggleSelectionTable1()
         this.$message.success('已开立')
       } else {
         this.$message.error('请选择开立项目')
@@ -210,10 +218,15 @@ export default {
               this.selectedAddedItems[i].itemID === this.addedItems[j].itemID
             ) {
               hfound = 1
+              if (this.addedItems[j].status !== '已开立') {
+                this.$message.info('无法作废未开立项目')
+                continue
+              }
               this.addedItems[j].status = '已作废'
             }
           }
         }
+        this.toggleSelectionTable1()
       } else {
         this.$message.error('请选择所作废项目')
       }
@@ -228,13 +241,14 @@ export default {
             ) {
               hfound = 1
               if (this.addedItems[j].status === '已开立') {
-                this.$message.error('无法删除已开立项目')
+                this.$message.info('无法删除已开立项目')
                 continue
               }
               this.addedItems.splice(j, 1)
             }
           }
         }
+        this.toggleSelectionTable1()
       } else {
         this.$message.error('请选择所删除项目')
       }
@@ -262,9 +276,16 @@ export default {
       if (this.addedItems.length > 0 && this.addedItems[0].status === '已开立'){
         this.addedItems[0].status = '执行中'
       }
+      this.toggleSelectionTable1()
     },
     checkSelectable(row) {
       return row.status != '执行中'
+    },
+    toggleSelectionTable1() {
+      this.$refs.table1.clearSelection()
+    },
+    toggleSelectionTable2() {
+      this.$refs.table2.clearSelection()
     }
   },
   computed: {
@@ -301,6 +322,7 @@ export default {
   },
   watch: {
     addedModelItems (val) {
+      let fo = 0
       for (let i = 0; i < val.length; i++) {
         if (!this.haveAdded(val[i])) {
           const item = {}
@@ -312,7 +334,12 @@ export default {
           item.memonicCode = val[i].memonicCode
           item.status = '暂存'
           this.addedItems.push(item)
+        } else {
+          fo = 1
         }
+      }
+      if (fo) {
+        this.$message.info('添加项中含有重复添加项目')
       }
       console.log(this.addedItems)
     }
