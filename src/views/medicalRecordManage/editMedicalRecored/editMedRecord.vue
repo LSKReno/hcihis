@@ -85,7 +85,7 @@
         </el-form>
       </div>
     </div>
-    <div style="width: 40%; float: right; height: 10px">
+    <div style="width: 40%; float: right">
       <diseaseDiagnose :currentPatient="currentPatient"></diseaseDiagnose>
     </div>
   </div>

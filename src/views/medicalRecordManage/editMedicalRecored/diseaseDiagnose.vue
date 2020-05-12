@@ -39,7 +39,7 @@
         :message="menuData"
         :header-cell-style="tableHeader"
         :key="menuKey"
-        max-height="200"
+        max-height="150"
         style="width: 100%; height: 150px; margin: 5px 5px 5px 5px"
         :aria-disabled="itemDisabled"
       >
